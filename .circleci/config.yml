@@ -1,8 +1,8 @@
 version: 2
 
 jobs:
-  blank_job_for_testing:
+  build:
     docker:
       - image: google/cloud-sdk
-      steps:
-        - run: echo hello
+    steps:
+      - run: echo hello
