@@ -1,7 +1,7 @@
 version: 2
 
 jobs:
-  build:
+  scratchpad:
     docker:
       - image: google/cloud-sdk
         environment:
@@ -9,3 +9,8 @@ jobs:
     steps:
       - run: echo hello
       - run: echo $TEST
+workflows:
+    version: 2
+    workflow:
+      jobs:
+        - scratchpad
