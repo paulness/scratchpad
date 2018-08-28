@@ -4,5 +4,7 @@ jobs:
   build:
     docker:
       - image: google/cloud-sdk
+        environment:
+          TEST: $TEST_DEV
     steps:
       - run: echo hello
