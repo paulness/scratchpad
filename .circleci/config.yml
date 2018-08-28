@@ -8,3 +8,4 @@ jobs:
           TEST: $TEST_DEV
     steps:
       - run: echo hello
+      - run: echo $TEST
