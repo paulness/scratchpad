@@ -1,16 +1,24 @@
 version: 2
 
 jobs:
-  scratchpad:
+  semantic_release:
+    docker:
+      - image: circleci/node:8
+    steps:
+      - run:
+          name: Run semantic_release
+          command: |
+            npm install @semantic-release/exec
+            npx semantic-release
+
+  scratchpad_google_cloud_sdk:
     docker:
       - image: google/cloud-sdk
-        environment:
-          TEST: $TEST_DEV
     steps:
-      - run: echo hello
-      - run: echo $TEST
+      - run: echo "Restart with SSH"
 workflows:
     version: 2
     workflow:
       jobs:
-        - scratchpad
+        - semantic_release
+        - scratchpad_google_cloud_sdk
