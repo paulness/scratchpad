@@ -1,3 +1,3 @@
 # scratchpad
 
-A scratchpad for testing various docker build environments from CircleCI using the SSH functionality.
+A scratchpad for interactively testing various commands inside docker images. Makes use of the CircleCI Virtual Machine SSH functionality.
