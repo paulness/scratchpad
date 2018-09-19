@@ -17,9 +17,15 @@ jobs:
       - image: google/cloud-sdk
     steps:
       - run: echo "Restart with SSH"
+  scratchpad_python3_6:
+    docker:
+      - image: circleci/python:3.6
+    steps:
+      - run: echo Restart with SSH
 workflows:
     version: 2
     workflow:
       jobs:
+        - scratchpad_python3_6
         - semantic_release
         - scratchpad_google_cloud_sdk
