@@ -1,23 +1,19 @@
 version: 2
 
-templates:
-  machine_job_template: &machine_job_template
-    machine: true
-    working_directory: /home/circleci/your-project-directory
-    environment:
-      DEBIAN_FRONTEND: "noninteractive"
-
 jobs:
   test_docker_in_docker:
-    docker: 
+    docker:
       - image: docker:18.09.1-dind
     steps:
       - setup_remote_docker:
           version: 18.09.1
-      run: echo hello
-    
+      - run: echo hello
+
   pupernetes:
-    <<: *machine_job_template
+    machine: true
+    working_directory: /home/circleci/your-project-directory
+    environment:
+      DEBIAN_FRONTEND: "noninteractive"
     steps:
       - checkout
       - run:
