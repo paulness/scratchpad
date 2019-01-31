@@ -8,6 +8,14 @@ templates:
       DEBIAN_FRONTEND: "noninteractive"
 
 jobs:
+  test_docker_in_docker:
+    docker: 
+      - image: docker:18.09.1-dind
+    steps:
+      - setup_remote_docker:
+          version: 18.09.1
+      run: echo hello
+    
   pupernetes:
     <<: *machine_job_template
     steps:
@@ -33,3 +41,4 @@ workflows:
   daemon:
     jobs:
       - pupernetes
+      - test_docker_in_docker
