@@ -5,7 +5,7 @@ jobs:
     docker:
       - image: microsoft/dotnet:2.2
     steps:
-      - checkout
+      - checkout:
           path: /tmp/unused
       - run:
           name: clone benchmarkdotnet master
@@ -23,7 +23,7 @@ jobs:
           name: Run sample benchmarks on 2
           working_directory: /tmp/benchmarkdotnet-master-2/BenchmarkDotNet/samples/BenchmarkDotNet.Samples
           command: dotnet run -c Release --filter * --join --artifacts /tmp/artifacts-run-2
-      
+
       - run:
           name: Compare benchmarks from 1 and 2
           working_directory: /tmp/benchmark-comparer
@@ -34,7 +34,6 @@ jobs:
               --base "/tmp/artifacts-run-1" \
               --diff "/tmp/artifacts-run-2" \
               --threshold 1% --top 10
-
 
 workflows:
   workflow:
