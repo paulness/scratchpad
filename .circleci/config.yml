@@ -1,40 +1,43 @@
-version: 2
+version: 2.1
 
 jobs:
-  test_docker_in_docker:
+  test_benchmark_run:
     docker:
-      - image: docker:18.09.1-dind
-    steps:
-      - setup_remote_docker:
-          version: 18.09.1
-      - run: echo hello
-
-  pupernetes:
-    machine: true
-    working_directory: /home/circleci/your-project-directory
-    environment:
-      DEBIAN_FRONTEND: "noninteractive"
+      - image: microsoft/dotnet:2.2
     steps:
       - checkout
+          path: /tmp/unused
       - run:
-          name: download
-          command: sudo curl -Lf https://github.com/DataDog/pupernetes/releases/download/v0.8.0/pupernetes -o /usr/local/bin/pupernetes && sudo chmod +x /usr/local/bin/pupernetes
+          name: clone benchmarkdotnet master
+          working_directory: /tmp/benchmarkdotnet-master-1
+          command: git clone https://github.com/dotnet/BenchmarkDotNet.git
       - run:
-          name: apt
-          command: sudo apt-get update -qq && sudo apt-get install -yqq systemd
+          name: clone benchmarkdotnet master (another copy)
+          working_directory: /tmp/benchmarkdotnet-master-2
+          command: git clone https://github.com/dotnet/BenchmarkDotNet.git
       - run:
-          name: run
-          command: sudo /usr/local/bin/pupernetes daemon run sandbox/ --job-type systemd --kubectl-link /usr/local/bin/kubectl --kubeconfig-path $HOME/.kube/config --dns-check
+          name: Run sample benchmarks on 1
+          working_directory: /tmp/benchmarkdotnet-master-1/BenchmarkDotNet/samples/BenchmarkDotNet.Samples
+          command: dotnet run -c Release --filter * --join --artifacts /tmp/artifacts-run-1
       - run:
-          name: kubectl
-          command: kubectl get all
+          name: Run sample benchmarks on 2
+          working_directory: /tmp/benchmarkdotnet-master-2/BenchmarkDotNet/samples/BenchmarkDotNet.Samples
+          command: dotnet run -c Release --filter * --join --artifacts /tmp/artifacts-run-2
+      
       - run:
-          name: something
-          command: echo "let's go ..."
+          name: Compare benchmarks from 1 and 2
+          working_directory: /tmp/benchmark-comparer
+          command: |
+            git clone https://github.com/dotnet/performance.git
+            cd src/tools/ResultsComparer
+            dotnet run \
+              --base "/tmp/artifacts-run-1" \
+              --diff "/tmp/artifacts-run-2" \
+              --threshold 1% --top 10
+
 
 workflows:
   version: 2
-  daemon:
+  cicd_workflow:
     jobs:
-      - pupernetes
-      - test_docker_in_docker
+      - test_benchmark_run
