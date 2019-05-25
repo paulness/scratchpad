@@ -23,6 +23,7 @@ jobs:
             --filter "*Encoding*" \
             --artifacts /tmp/artifacts-run-1 \
             -f netcoreapp2.1 --runtimes netcoreapp2.1 \
+            --job long \
             --exporters fulljson
       - run:
           name: Run sample benchmarks on 2
@@ -32,6 +33,7 @@ jobs:
             --filter "*Encoding*" \
             --artifacts /tmp/artifacts-run-2 \
             -f netcoreapp2.1 --runtimes netcoreapp2.1 \
+            --job long \
             --exporters fulljson
 
       - run:
@@ -44,7 +46,7 @@ jobs:
             dotnet run \
               --base "/tmp/artifacts-run-1/results" \
               --diff "/tmp/artifacts-run-2/results" \
-              --threshold 1% --top 10
+              --threshold 1% --top 10 | tee compare-results.md
 
 workflows:
   workflow:
