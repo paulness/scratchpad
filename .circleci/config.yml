@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   testing_benchmark_compare:
     docker:
-      - image: microsoft/dotnet:2.2
+      - image: mcr.microsoft.com/dotnet/core/sdk:2.2
     steps:
       - checkout:
           path: /tmp/unused
