@@ -1,7 +1,7 @@
-version: 2.1
+version: 2
 
 jobs:
-  cicd_workflow:
+  testing_benchmark_compare:
     docker:
       - image: microsoft/dotnet:2.2
     steps:
@@ -37,7 +37,6 @@ jobs:
 
 
 workflows:
-  version: 2
-  cicd_workflow:
+  workflow:
     jobs:
-      - test_benchmark_run
+      - testing_benchmark_compare
