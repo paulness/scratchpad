@@ -20,7 +20,7 @@ jobs:
           working_directory: /tmp/benchmarkdotnet-master-1/BenchmarkDotNet/samples/BenchmarkDotNet.Samples
           command: |
             dotnet run -c Release \
-            --filter "*IntroEncoding.Foo*" \
+            --filter "*Encoding*" \
             --artifacts /tmp/artifacts-run-1 \
             -f netcoreapp2.1 --runtimes netcoreapp2.1 \
             --job short \
@@ -35,7 +35,6 @@ jobs:
             -f netcoreapp2.1 --runtimes netcoreapp2.1 \
             --job short \
             --exporters fulljson
-
       - run:
           name: Compare benchmarks from 1 and 2
           working_directory: /tmp/benchmark-comparer
@@ -46,7 +45,15 @@ jobs:
             dotnet run \
               --base "/tmp/artifacts-run-1/results" \
               --diff "/tmp/artifacts-run-2/results" \
-              --threshold 1% --top 10 | tee compare-results.md
+              --threshold "1%" \
+              --noise "0.3ns" \
+              --top 10 | tee compare-results.md
+      - store_artifacts:
+          path: /tmp/benchmark-comparer/compare-results.md
+      - store_artifacts:
+          path: /tmp/artifacts-run-1/results
+      - store_artifacts:
+          path: /tmp/artifacts-run-2/results
 
 workflows:
   workflow:
