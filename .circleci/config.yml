@@ -19,21 +19,21 @@ jobs:
           name: Run sample benchmarks on 1
           working_directory: /tmp/benchmarkdotnet-master-1/BenchmarkDotNet/samples/BenchmarkDotNet.Samples
           command: |
-            dotnet run -c Release --join \
-            --filter "*Encoding*" \
+            dotnet run -c Release \
+            --filter "*IntroEncoding.Foo*" \
             --artifacts /tmp/artifacts-run-1 \
             -f netcoreapp2.1 --runtimes netcoreapp2.1 \
-            --job long \
+            --job short \
             --exporters fulljson
       - run:
           name: Run sample benchmarks on 2
           working_directory: /tmp/benchmarkdotnet-master-2/BenchmarkDotNet/samples/BenchmarkDotNet.Samples
           command: |
-            dotnet run -c Release --join \
+            dotnet run -c Release \
             --filter "*Encoding*" \
             --artifacts /tmp/artifacts-run-2 \
             -f netcoreapp2.1 --runtimes netcoreapp2.1 \
-            --job long \
+            --job short \
             --exporters fulljson
 
       - run:
