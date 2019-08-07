@@ -29,8 +29,8 @@ jobs:
           command: |
             curl -sLo_ https://storage.googleapis.com/kubernetes-helm/helm-v${HELM}-linux-amd64.tar.gz
             tar -zxvf _
-            mv ./linux-amd64/helm ${EXE_FOLDER}/
-            chmod +x $EXE_FOLDER/helm
+            sudo mv ./linux-amd64/helm ${EXE_FOLDER}/
+            sudo chmod +x $EXE_FOLDER/helm
             rm _
             rm -rf linux-amd64
       - run:
@@ -40,6 +40,7 @@ jobs:
             kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
             kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'      
             helm init --service-account tiller --upgrade
+            kubectl rollout status -w deployment/tiller-deploy --namespace=kube-system
       - run:
           name: something
           command: echo "let's go ..."
