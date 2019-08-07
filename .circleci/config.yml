@@ -39,6 +39,21 @@ jobs:
             kubectl create serviceaccount --namespace kube-system tiller
             kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
             helm init --service-account tiller --upgrade --wait
+
+      - run:
+          name: Install the latest Istio
+          command: |
+            ISTIO_TMP_DIR=$(mktemp -d)
+            cd "$ISTIO_TMP_DIR"
+            curl -L https://git.io/getLatestIstio | sh -
+            ISTIO_PATH="$ISTIO_TMP_DIR/$(ls)"
+            cd -
+
+            helm install 
+              "$ISTIO_PATH/install/kubernetes/helm/istio" \
+              --name istio --namespace istio-system \
+              --values "$ISTIO_PATH/install/kubernetes/helm/istio/values-istio-minimal.yaml" \
+              --wait
       - run:
           name: something
           command: echo "let's go ..."
