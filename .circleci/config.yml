@@ -1,14 +1,6 @@
 version: 2
 
 jobs:
-  test_docker_in_docker:
-    docker:
-      - image: docker:18.09.1-dind
-    steps:
-      - setup_remote_docker:
-          version: 18.09.1
-      - run: echo hello
-
   pupernetes:
     machine: true
     working_directory: /home/circleci/your-project-directory
@@ -29,6 +21,25 @@ jobs:
           name: kubectl
           command: kubectl get all
       - run:
+          name: install helm
+          environment:
+            EXE_FOLDER: /usr/local/bin
+            HELM: 2.14.2
+          command: |
+            curl -sLo_ https://storage.googleapis.com/kubernetes-helm/helm-v${HELM}-linux-amd64.tar.gz
+            tar -zxvf _
+            mv ./linux-amd64/helm ${EXE_FOLDER}/
+            chmod +x $EXE_FOLDER/helm
+            rm _
+            rm -rf linux-amd64
+      - run:
+          name: Connect Helm with Pupernetes
+          command: |
+            kubectl create serviceaccount --namespace kube-system tiller
+            kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
+            kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'      
+            helm init --service-account tiller --upgrade
+      - run:
           name: something
           command: echo "let's go ..."
 
@@ -37,4 +48,3 @@ workflows:
   daemon:
     jobs:
       - pupernetes
-      - test_docker_in_docker
