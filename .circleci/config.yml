@@ -49,10 +49,9 @@ jobs:
             ISTIO_PATH="$ISTIO_TMP_DIR/$(ls)"
             cd -
 
-            helm install 
+            helm install \
               "$ISTIO_PATH/install/kubernetes/helm/istio" \
               --name istio --namespace istio-system \
-              --values "$ISTIO_PATH/install/kubernetes/helm/istio/values-istio-minimal.yaml" \
               --wait
       - run:
           name: something
