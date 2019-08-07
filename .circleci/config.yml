@@ -6,6 +6,7 @@ jobs:
     working_directory: /home/circleci/your-project-directory
     environment:
       DEBIAN_FRONTEND: "noninteractive"
+      SUDO_USER: "circleci"
     steps:
       - checkout
       - run:
