@@ -11,13 +11,13 @@ jobs:
       - checkout
       - run:
           name: download
-          command: sudo curl -Lf https://github.com/DataDog/pupernetes/releases/download/v0.9.0/pupernetes -o /usr/local/bin/pupernetes && sudo chmod +x /usr/local/bin/pupernetes
+          command: sudo curl -Lf https://github.com/DataDog/pupernetes/releases/download/v0.10.0/pupernetes -o /usr/local/bin/pupernetes && sudo chmod +x /usr/local/bin/pupernetes
       - run:
           name: apt
           command: sudo apt-get update -qq && sudo apt-get install -yqq systemd
       - run:
           name: run
-          command: sudo /usr/local/bin/pupernetes daemon run sandbox/ --job-type systemd --kubectl-link /usr/local/bin/kubectl --kubeconfig-path $HOME/.kube/config --dns-check
+          command: sudo /usr/local/bin/pupernetes daemon run sandbox/ --job-type systemd --kubectl-link /usr/local/bin/kubectl --kubeconfig-path $HOME/.kube/config --dns-check --hyperkube-version=1.14
       - run:
           name: kubectl
           command: kubectl get all
@@ -45,15 +45,16 @@ jobs:
           command: |
             ISTIO_TMP_DIR=$(mktemp -d)
             cd "$ISTIO_TMP_DIR"
-            curl -L https://git.io/getLatestIstio | sh -
+            curl -L https://github.com/istio/istio/releases/download/1.2.5/istio-1.2.5-linux.tar.gz | tar xz
             ISTIO_PATH="$ISTIO_TMP_DIR/$(ls)"
             cd "$ISTIO_PATH"
+            
+            helm install "$ISTIO_PATH/install/kubernetes/helm/istio-init" --name istio-init --namespace istio-system --wait
 
-            helm install \
-              install/kubernetes/helm/istio \
+            helm install "$ISTIO_PATH/install/kubernetes/helm/istio" \
               --name istio \
               --namespace istio-system \
-              --values install/kubernetes/helm/istio/values-istio-minimal.yaml \
+              --set gateways.istio-ingressgateway.type="NodePort" \
               --wait
       - run:
           name: something
