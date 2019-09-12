@@ -54,7 +54,6 @@ jobs:
             helm install "$ISTIO_PATH/install/kubernetes/helm/istio" \
               --name istio \
               --namespace istio-system \
-              --values install/kubernetes/helm/istio/values-istio-minimal.yaml \
               --set gateways.istio-ingressgateway.type=NodePort \
               --wait
       - run:
