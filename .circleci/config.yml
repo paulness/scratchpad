@@ -45,17 +45,34 @@ jobs:
           command: |
             ISTIO_TMP_DIR=$(mktemp -d)
             cd "$ISTIO_TMP_DIR"
-            curl -L https://github.com/istio/istio/releases/download/1.3.0/istio-1.3.0-linux.tar.gz | tar xz
+            curl -L https://github.com/istio/istio/releases/download/1.2.6/istio-1.2.6-linux.tar.gz | tar xz
             ISTIO_PATH="$ISTIO_TMP_DIR/$(ls)"
             cd "$ISTIO_PATH"
             
-            helm install "$ISTIO_PATH/install/kubernetes/helm/istio-init" --name istio-init --namespace istio-system --wait
-
+            helm install "$ISTIO_PATH/install/kubernetes/helm/istio-init" --name istio-init --namespace istio-system
+            
+            # Sleep for 30 seconds for the CRD's to be added properly (TODO fix this)
+            sleep 30
+            
             helm install "$ISTIO_PATH/install/kubernetes/helm/istio" \
-              --name istio \
-              --namespace istio-system \
-              --set gateways.istio-ingressgateway.type=NodePort \
-              --wait
+                --name istio \
+                --namespace istio-system \
+                --set gateways.istio-ingressgateway.type=NodePort
+                
+            # Get names of all Istio deployments
+            DEPLOYMENT_NAMES=$(kubectl get deployment -o=json --namespace istio-system | jq ".items[].metadata.name")
+
+            # Wait for all Istio services
+            while read -r line; do
+                echo "Checking deployment of $line"
+                kubectl rollout status -w "deployment/$line" --namespace=istio-system
+            done <"$DEPLOYMENT_NAMES"
+
+            # Labelling namespace default for sidecar injection
+            kubectl label namespace default istio-injection=enabled
+
+            # Showing all namespaces and the sidecar injection status
+            kubectl get namespace -L istio-injection
       - run:
           name: something
           command: echo "let's go ..."
