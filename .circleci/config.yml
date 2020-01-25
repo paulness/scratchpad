@@ -11,7 +11,7 @@ jobs:
       - checkout
       - run:
           name: download
-          command: sudo curl -Lf https://github.com/DataDog/pupernetes/releases/download/v0.10.0/pupernetes -o /usr/local/bin/pupernetes && sudo chmod +x /usr/local/bin/pupernetes
+          command: sudo curl -Lf https://github.com/DataDog/pupernetes/releases/download/v0.11.0/pupernetes -o /usr/local/bin/pupernetes && sudo chmod +x /usr/local/bin/pupernetes
       - run:
           name: apt
           command: sudo apt-get update -qq && sudo apt-get install -yqq systemd
@@ -27,25 +27,19 @@ jobs:
             EXE_FOLDER: /usr/local/bin
             HELM: 2.14.2
           command: |
-            curl -sLo_ https://storage.googleapis.com/kubernetes-helm/helm-v${HELM}-linux-amd64.tar.gz
+            curl -sLo_ https://get.helm.sh/helm-v{HELM}-linux-amd64.tar.gz
             tar -zxvf _
             sudo mv ./linux-amd64/helm ${EXE_FOLDER}/
             sudo chmod +x $EXE_FOLDER/helm
             rm _
             rm -rf linux-amd64
-      - run:
-          name: Connect Helm with Pupernetes
-          command: |
-            kubectl create serviceaccount --namespace kube-system tiller
-            kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
-            helm init --service-account tiller --upgrade --wait
 
       - run:
           name: Install the latest Istio
           command: |
             ISTIO_TMP_DIR=$(mktemp -d)
             cd "$ISTIO_TMP_DIR"
-            curl -L https://github.com/istio/istio/releases/download/1.2.6/istio-1.2.6-linux.tar.gz | tar xz
+            curl -L https://github.com/istio/istio/releases/download/1.3.3/istio-1.3.3-linux.tar.gz | tar xz
             ISTIO_PATH="$ISTIO_TMP_DIR/$(ls)"
             cd "$ISTIO_PATH"
             
