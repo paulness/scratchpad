@@ -5,7 +5,7 @@ orbs:
 jobs:
   kubernetes:
     docker:
-      - image: ubuntu
+      - image: cimg/base:stable
     steps:
       - checkout
       - kube-orb/install-kubectl
