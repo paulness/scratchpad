@@ -5,7 +5,7 @@ orbs:
 jobs:
   kubernetes:
     docker:
-      - image: debian:10
+      - image: ubuntu
     steps:
       - checkout
       - kube-orb/install-kubectl
