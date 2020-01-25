@@ -25,9 +25,8 @@ jobs:
           name: install helm
           environment:
             EXE_FOLDER: /usr/local/bin
-            HELM: 2.14.2
           command: |
-            curl -sLo_ https://get.helm.sh/helm-v{HELM}-linux-amd64.tar.gz
+            curl -sLo_ https://get.helm.sh/helm-v3.0.2-linux-amd64.tar.gz
             tar -zxvf _
             sudo mv ./linux-amd64/helm ${EXE_FOLDER}/
             sudo chmod +x $EXE_FOLDER/helm
