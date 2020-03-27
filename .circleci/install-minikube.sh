@@ -5,7 +5,7 @@ curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-
    && sudo install minikube-linux-amd64 /usr/local/bin/minikube
 
 # Start minikube
-sudo minikube start minikube start --vm-driver=none --kubernetes-version v1.14.0
+sudo -E minikube start minikube start --vm-driver=none --kubernetes-version v1.14.0
 
 # Install kubectl
 curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
