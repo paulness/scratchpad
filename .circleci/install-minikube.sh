@@ -5,7 +5,7 @@ curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-
    && sudo install minikube-linux-amd64 /usr/local/bin/minikube
 
 # Start minikube
-minikube start minikube start --vm-driver=none --kubernetes-version v1.14.0
+sudo minikube start minikube start --vm-driver=none --kubernetes-version v1.14.0
 
 # Install kubectl
 curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
@@ -20,5 +20,5 @@ sudo mv ./linux-amd64/helm ${EXE_FOLDER}/
 sudo chmod +x $EXE_FOLDER/helm
 rm _
 rm -rf linux-amd64
-helm repo add stable https://kubernetes-charts.storage.googleapis.com
-
+sudo helm repo add stable https://kubernetes-charts.storage.googleapis.com
+sudo helm repo update
