@@ -3,15 +3,17 @@ version: 2
 jobs:
   scratch:
     machine:
+      user: root
       image: ubuntu-1604:201903-01
       environment:
         CHANGE_MINIKUBE_NONE_USER: true
-        KUBECONFIG: /home/circleci/.kube/config
+        KUBECONFIG: /home/root/.kube/config
         MINIKUBE_WANTUPDATENOTIFICATION: false
         MINIKUBE_WANTREPORTERRORPROMPT: false
-        MINIKUBE_HOME: /home/circleci
+        MINIKUBE_HOME: /home/root
         DEBIAN_FRONTEND: noninteractive
-        SUDO_USER: circleci
+        SUDO_USER: root
+        user: node
     steps:
       - checkout
       - run: .circleci/install-minikube.sh
