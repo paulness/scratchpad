@@ -1,31 +1,14 @@
 version: 2
 
 jobs:
-  make_file:
-    docker:
-      - image: bash
+  scratch:
+    machine:
+      image: ubuntu-1604:201903-01
     steps:
       - checkout
-      - run: mkdir plans
-      - run: echo "hello" > plans/hello.txt
-      - persist_to_workspace:
-          root: .
-          paths:
-            - plans
-  get_file:
-    docker:
-      - image: bash
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - run: cat ~/project/plans/hello.txt
 
 workflows:
   version: 2
   daemon:
     jobs:
-      - make_file
-      - get_file:
-          requires:
-            - make_file
+      - scratch
