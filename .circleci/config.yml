@@ -14,8 +14,7 @@ jobs:
         SUDO_USER: circleci
     steps:
       - checkout
-      - run: |
-        sudo su && .circleci/install-minikube.sh
+      - run: sudo su && .circleci/install-minikube.sh
 
 
 workflows:
