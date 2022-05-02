@@ -8,7 +8,7 @@ jobs:
       - image: cimg/base:stable
     steps:
       - checkout
-      - kube-orb/install-kubectl
+      - kubernetes/install-kubectl
       - run:
           name: kubectl
           command: kubectl get all
