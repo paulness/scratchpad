@@ -8,6 +8,7 @@ jobs:
       - image: cimg/base:stable
     steps:
       - checkout
+      - kubernetes/install
       - kubernetes/install-kubectl
       - run:
           name: kubectl
