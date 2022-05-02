@@ -11,7 +11,7 @@ jobs:
       - kubernetes/install-kubectl
       - run:
           name: kubectl
-          command: kubectl get all
+          command: kubectl get all 
 
 workflows:
   version: 2
